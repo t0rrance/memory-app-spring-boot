@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.memo.mapper.UserMapper">
+
+    <insert id="insertUser" useGeneratedKeys="true" keyColumn="id" keyProperty="user.id">
+        insert into users (
+            name
+            ,user_name
+            ,password
+            ,role
+            ,token
+        ) values (
+            #{user.name}
+            ,#{user.username}
+            ,#{user.password}
+            ,#{user.role}
+            ,#{user.token}
+        )
+    </insert>
+
+    <select id="findByUsername" resultType="com.example.memo.mapper.model.User">
+        select
+        id
+        ,name
+        ,user_name
+        ,password
+        ,role
+        ,token
+         from users where users.user_name = #{username}
+    </select>
+
+    <select id="selectUser" resultType="com.example.memo.mapper.model.User">
+        select
+        id
+        ,name
+        ,user_name
+        ,password
+        ,role
+        ,token
+         from users where users.id = #{id}
+    </select>
+
+    <select id="selectUserId" resultType="java.lang.Long">
+        select id from users where users.user_name = #{username}
+    </select>
+
+    <select id="selectUserList" resultType="com.example.memo.controller.model.UserResponse">
+        select
+        id
+        ,name
+        ,user_name
+        ,role
+         from users
+    </select>
+
+</mapper>

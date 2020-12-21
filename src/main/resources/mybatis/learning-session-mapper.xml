@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.memo.mapper.LearningSessionMapper">
+
+    <insert id="insertLearningSession" useGeneratedKeys="true" keyColumn="id" keyProperty="learningSession.id">
+        insert into learning_sessions (
+            user_id
+            ,date
+        ) values (
+            #{learningSession.userId}
+            ,#{learningSession.date}
+        )
+    </insert>
+
+    <resultMap id="learningSessionMap" type="com.example.memo.controller.model.AddPartWordsResponse" autoMapping="true">
+        <id property="id" column="id"/>
+        <collection property="wordList" resultMap="words"/>
+    </resultMap>
+
+    <resultMap id="words" type="com.example.memo.controller.model.Word" autoMapping="true">
+        <id property="polish" column="polish"/>
+        <id property="english" column="english"/>
+    </resultMap>
+
+
+    <sql id="selectColumnLearningSession">
+        s.id
+        ,w.polish
+        ,w.english
+    </sql>
+
+    <select id="selectLearningSession" resultMap="learningSessionMap">
+        select
+            <include refid="selectColumnLearningSession"></include>
+        from learning_sessions s
+        inner join users u on u.id = s.user_id
+        inner join words w on w.learning_session_id = s.id
+        where s.id = #{id}
+    </select>
+
+    <select id="selectLearningSessions" resultType="com.example.memo.controller.model.WordReviewSessionResponse">
+          select id,  user_id, date, count(id) quantity from learning_sessions s inner join words w on w.learning_session_id = s.id
+          group by id, user_id, date
+    </select>
+
+</mapper>
